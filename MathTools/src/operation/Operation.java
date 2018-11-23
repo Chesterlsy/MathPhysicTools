@@ -38,11 +38,36 @@ public class Operation {
 		return sum(q1, changeSign(q2));
 	}
 	
-	public static Quantity product(Quantity q1, Quantity q2) {
-		return null;
+	public static Quantity product(Quantity q1, Quantity q2) throws DimensionUnmatchedException {
+		int d1 = q1.getDimension();
+		String u1 = q1.unit();
+		int d2 = q2.getDimension();
+		String u2 = q2.unit();
+		if (d1 == 0 && d2 == 0) {
+			return new Scalar(mergeUnit(u1, u2), q1.magnitude() * q2.magnitude());
+		} else if (d1 == 0 && d2 != 0) {
+			double m1 = q1.magnitude();
+			for (int i = 1; i <= d2; i++) {
+				((Vector) q2).setCoordinate(i, m1 * ((Vector)q2).getCoordinate(i));
+			}
+			return new Vector(d2, mergeUnit(u1, u2), ((Vector)q2).getCoordinates());
+		} else if (d1 != 0 && d2 == 0) {
+			return product(q2, q1);
+		} else if (d1 != 0 && d2 != 0 && d1 == d2) {
+			double product = 0;
+			for (int i = 1; i <= d1; i++) {
+				product += ((Vector)q1).getCoordinate(i) * ((Vector)q2).getCoordinate(i);
+			}
+			return new Scalar(mergeUnit(u1, u2), product);
+			
+		} else {
+			throw new DimensionUnmatchedException();
+		}
+	
 	}
 	
-	public static Quantity dotProduct(Quantity q1, Quantity q2) {
+	public static Quantity CrossProduct (Quantity q1, Quantity q2) {
+		
 		return null;
 	}
 	
@@ -66,6 +91,10 @@ public class Operation {
 			}
 			return new Vector(d, u, result);
 		}
+	}
+	
+	public static String mergeUnit(String unit1, String unit2) {
+		return "";
 	}
 	
 

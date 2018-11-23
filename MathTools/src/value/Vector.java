@@ -10,6 +10,13 @@ import java.util.List;
  */
 public class Vector extends Quantity {
 	
+	private enum System {
+		CARTESIAN,
+		POLAR,
+		CYLINDRICAL,
+		SPHERICAL
+	}
+	
 	private List<Double> coordinates;
 	
 	public Vector(int dimension, String unit) {
